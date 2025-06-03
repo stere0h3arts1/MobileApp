@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.loginform {
+  max-width: 35%;
+  height: 100%;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.logo {
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+picture img {
+  width: 100%;
+  height: auto;
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/stylesheet.css" />
+    <link rel="stylesheet" href="assets/css/all.css" />
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/sweetalert2.all.js"></script>
+    <script src="assets/js/jquery.cookie.js"></script>
+    <script>
+      function load_user() {
+        var usr = $.cookie("username");
+        if (usr == undefined) {
+          window.location.replace("Login.html");
+        }
+        $("#username").html("<b>" + usr + "<b>");
+      }
+    </script>
+    <script>
+      windows.indexedDB =
+        window.indexedDB ||
+        window.mozIndexedDB ||
+        window.webkitIndexedDB ||
+        window.msIndexedDB;
+
+      windows.IDBTransaction =
+        window.IDBTransaction ||
+        window.webkitIDBTransaction ||
+        window.msIDBTransaction;
+      windows.IDBKeyRange =
+        window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
+      if (!window.indexedDB) {
+        alert("Your browser doesn't support a stable version of IndexedDB.");
+      }
+
+      var request = window.indexedDB.open("subjectDB", 1);
+      const subjectData = [
+        { id: 1, Subject_code: "Subject 1", description: "Math", units: "3" },
+        { id: 2, Subject_code: "Subject 2", description: "Eng", units: "4" },
+        {
+          id: 3,
+          Subject_code: "Subject 3",
+          description: "Pol Scie",
+          units: "5",
+        },
+        { id: 4, Subject_code: "Subject 4", description: "Fil", units: "6" },
+        { id: 5, Subject_code: "Subject 5", description: "Math", units: "7" },
+      ];
+      var db;
+
+      request.onerror = function (event) {
+        console.log("Error opening database.");
+      };
+      request.onsuccess = function (event) {
+        db = request.result;
+        console.log("Database opened successfully." + db);
+      };
+
+      request.onupgradeneeded = function (event) {
+        db = event.target.result;
+        var objectStore = db.createObjectStore("subjects", { keyPath: "id" });
+        for (var i in subjectData) {
+          objectStore.add(subjectData[i]);
+        }
+        console.log("Object store created and data added.");
+      };
+
+      function readAll() {
+        var objectStore = db.transaction("subjects").objectStore("subjects");
+        objectStore.openCursor().onsuccess = function (event) {
+          var cursor = event.target.result;
+          if (cursor) {
+            alert("Subject Code: " + cursor.value.Subject_code);
+            alert("Description: " + cursor.value.description);
+          } else {
+            console.log("No more entries.");
+          }
+        };
+      }
+    </script>
+  </head>
+  <body onload="load_user()">
+    <div class="container">
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <!-- Brand -->
+        <a class="navbar-brand" href="dashboard.html">
+          <img src="assets/img/logotcgc.png" alt="" />
+        </a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#collapsibleNavbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Add</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="view.html">View</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="search.html">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="delete.html">Delete</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="Edit.html">Edit</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbardrop"
+                data-toggle="dropdown"
+              >
+                <span id="username">Username</span>
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="profile.html">Profile</a>
+                <a id="logout" class="dropdown-item" href="#">Logout</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="body">
+        <div class="row m-1 shadow rounded">
+          <div class="col-2 d-none d-md-block"></div>
+          <div class="col-md-8">
+            <img
+              src="assets/img/tcgcLogo.jpg"
+              width="100%"
+              height="90%"
+              alt="Logo"
+              style="opacity: 0.2"
+            />
+            <button onclick="readAll()">READ ALL</button>
+          </div>
+          <div class="logo mt-3 row justify-content-center"></div>
+          <div class="row justify-content-center"></div>
+        </div>
+      </div>
+    </div>
+    <div
+      id="wait"
+      style="
+        display: none;
+        width: 69px;
+        height: 89px;
+        border: 1px solid black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        padding: 2px;
+      "
+    >
+      <img
+        src="assets/img/demo_wait.gif"
+        width="64"
+        height="64"
+      /><br />Loading..
+    </div>
+    <script>
+      $(document).ready(function () {
+        var ip = "http://127.0.0.1:8000";
+
+        $(document).ajaxStart(function () {
+          $("#wait").css("display", "block");
+        });
+        $(document).ajaxComplete(function () {
+          $("#wait").css("display", "none");
+        });
+        $("#logout").click(function () {
+          var token = $.cookie("token");
+          $.ajax({
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            type: "POST",
+            url: ip + "/api/logout",
+            data: { token: token },
+            success: function (res) {
+              Swal.fire({
+                icon: "success",
+                title: "Logout Successful",
+              }).then((result) => {
+                var cookies = $.cookie();
+                for (var cookie in cookies) {
+                  $.removeCookie(cookie);
+                }
+                window.location.replace("login.html");
+              });
+            },
+            error: function (res) {
+              alert(res.responseJSON.msg);
+            },
+          });
+        });
+      });
+    </script>
+
+    <script></script>
+  </body>
+</html>
