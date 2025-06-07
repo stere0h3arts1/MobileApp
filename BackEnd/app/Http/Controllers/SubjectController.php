@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Product;
+use App\Models\Subject;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class SubjectController extends Controller
 {
-    /**
+   /**
      * User registration
      */
     public function register(Request $request){
         $user = new User;
 		$user->username = $request->username;
-		$user->password = bcrypt($request->password);
+		// $user->password = bcrypt($request->password);
+        $user->password = Hash::make($request->password);
 		$user->fullname = $request->fullname;
         $user->token = '';
 		$user->save();
@@ -96,11 +97,11 @@ class ProductController extends Controller
         if($token){
             $user = User::where('token', $token)->first();
             if($user){
-                $product = new Product;
-                $product->product_name = $request->product_name;
-                $product->product_price = $request->product_price;
-                $product->product_description = $request->product_description;
-                $product->save();
+                $subject = new Subject();
+                $subject->subject_code = $request->input('subject_code');
+                $subject->description = $request->input('description');
+                $subject->units = $request->input('units');
+                $subject->save();
                 return response()->json([
                     'msg' => 'New product was successfully saved.'
                 ], 201);
@@ -126,8 +127,8 @@ class ProductController extends Controller
         if($token){
             $user = User::where('token', $token)->first();
             if($user){
-                $product = Product::all();
-                return response()->json($product, 200);
+                $subjects = Subject::all();
+                return response()->json($subjects, 200);
             }
             else {
                 return response()->json([
@@ -150,13 +151,13 @@ class ProductController extends Controller
         if($token){
             $user = User::where('token', $token)->first();
             if($user){
-                $product = Product::find($id);
-                if($product){
-                    return response()->json($product, 200);
+                $subjects = Subject::find($id);
+                if($subjects){
+                    return response()->json($subjects, 200);
                 }
                 else {
                     return response()->json([
-                        'msg' => 'Product not found.'
+                        'msg' => 'Subject not found.'
                     ], 400);
                 }
             }
@@ -176,17 +177,23 @@ class ProductController extends Controller
     /**
      * Product delete
      */
-    public function delete(Request $request){
+    public function destroy(Request $request){
         $token = $request->bearerToken();
         if($token){
             $user = User::where('token', $token)->first();
             if($user){
-                $product_id = $request->product_id;
-                $product = Product::find($product_id);
-                $product->delete();
-                return response()->json([
-                    'msg' => 'Product was successfully deleted.'
-                ], 200);
+                $sub_id = $request->sub_id;
+                $subject = Subject::find($sub_id);
+                if ($subject) {
+                    $subject->delete();
+                    return response()->json([
+                        'msg' => 'Product was successfully deleted.'
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'msg' => 'Subject not found.'
+                    ], 404);
+                }
             }
             else {
                 return response()->json([
@@ -204,24 +211,29 @@ class ProductController extends Controller
     /**
      * Product update
      */
-    public function update(Request $request){
+    public function update(Request $request, $id){
         $token = $request->bearerToken();
         if($token){
             $user = User::where('token', $token)->first();
             if($user){
-                $product_id_old = $request->product_id_old;
-                $product_id = $request->product_id;
-                $product_name = $request->product_name;
-                $product_price = $request->product_price;
-                $product_description = $request->product_description;
-                $product = Product::find($product_id_old);
-                $product->product_id = $product_id;
-                $product->product_name = $product_name;
-                $product->product_price = $product_price;
-                $product->product_description = $product_description;
-                $product->save();
+                $id = $request->id;
+                $subject_code = $request->subject_code;
+                $description = $request->description;
+                $units = $request->units;
+                $subject = Subject::find($id);
+                if (!$subject) {
+                    return response()->json([
+                        'msg' => 'Subject not found.'
+                    ], 404);
+                }
+
+                $subject->subject_code = $subject_code;
+                $subject->description = $description;
+                $subject->units = $units;
+                $subject->save();
+
                 return response()->json([
-                    'msg' => 'Product was successfully updated.'
+                    'msg' => 'Subject was successfully updated.'
                 ], 200);
             }
             else {

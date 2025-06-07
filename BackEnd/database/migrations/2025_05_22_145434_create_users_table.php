@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('userid');
-            $table->string('username');
+            $table->id('user_id');
+            $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('fullname');
             $table->string('token');
@@ -23,13 +24,14 @@ return new class extends Migration
         DB::table('users')->insert([
             [
                 'username'=>'juan',
-                'password'=>'$2y$12$dN.6DGvwzgR47FiOfHs96OxlEYw4xE3k4TBMyvutDOPjm7az3ug2S',
+                'email'=>'juan',
+                'password'=>'*884B2932FBF0CA266EC48EE05A3DA15388FA7E3E',
                 'fullname'=>'Juan Dela Cruz',
                 'token'=>''
             ],
             [
                 'username'=>'pedro',
-                'password'=>'$2y$12$acAvixOX57POtE5iAZV0ge8C5L9dyG7IIgsALQEEVRURDemNw4Zou',
+                'password'=>'*0CD5B5852B8E5B4131BD24FB9A1AA1D521399A64',
                 'fullname'=>'Pedro Pendoko',
                 'token'=>''
             ]

@@ -13,13 +13,13 @@
     <script src="assets/js/sweetalert2.all.js"></script>
     <script src="assets/js/jquery.cookie.js"></script>
     <script>
-      function load_user() {
-        var usr = $.cookie("username");
-        if (usr == undefined) {
-          window.location.replace("Login.html");
-        }
-        $("#username").html("<b>" + usr + "<b>");
-      }
+      // function load_user() {
+      //   var usr = $.cookie("username");
+      //   if (usr == undefined) {
+      //     window.location.replace("Login.html");
+      //   }
+      //   $("#username").html("<b>" + usr + "<b>");
+      // }
     </script>
     <script>
       windows.indexedDB =
@@ -152,7 +152,6 @@
               alt="Logo"
               style="opacity: 0.2"
             />
-            <button onclick="readAll()">READ ALL</button>
           </div>
           <div class="logo mt-3 row justify-content-center"></div>
           <div class="row justify-content-center"></div>

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SubjectController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,19 +21,19 @@ use App\Http\Controllers\ProductController;
 // });
 
 // register -- post
-Route::post('register', [ProductController::class, 'register']);
+Route::post('register', [SubjectController::class, 'register']);
 // login -- post
-Route::post('login', [ProductController::class, 'login']);
+Route::post('login', [SubjectController::class, 'login']);
 // logout -- post
-Route::post('logout', [ProductController::class, 'logout']);
+Route::post('logout', [SubjectController::class, 'logout']);
 
 // create -- post
-Route::post('products', [ProductController::class, 'create']);
+Route::post('subject', [SubjectController::class, 'create']);
 // read -- get
-Route::get('products', [ProductController::class, 'read']);
+Route::get('subject', [SubjectController::class, 'read']);
 // read(id) -- get
-Route::get('products/{id}', [ProductController::class, 'read_id']);
+Route::get('subject/{id}', [SubjectController::class, 'read_id']);
 // delete -- delete
-Route::delete('products', [ProductController::class, 'delete']);
+Route::delete('subject/{id}', [SubjectController::class, 'destroy']);
 // update -- put
-Route::put('products', [ProductController::class, 'update']);
+Route::put('subject/{id}', [SubjectController::class, 'update']);
